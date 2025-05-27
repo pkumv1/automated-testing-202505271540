@@ -1,0 +1,57 @@
+{
+  "executionSummary": {
+    "timestamp": "2025-05-27T10:20:15Z",
+    "repository": "EGOV-RTS-NMC",
+    "commitTested": "430275b",
+    "changeDetection": {
+      "filesChanged": 3,
+      "functionsModified": 3,
+      "linesChanged": 31,
+      "testReduction": "70%"
+    },
+    "testExecution": {
+      "totalTests": 22,
+      "passed": 22,
+      "failed": 0,
+      "passRate": "100%",
+      "categories": {
+        "ui": 3,
+        "api": 3,
+        "integration": 1,
+        "load": 3,
+        "regression": 3,
+        "chaos": 3,
+        "crossBrowser": 6
+      }
+    },
+    "selfHealing": {
+      "totalAttempts": 4,
+      "successRate": "100%",
+      "strategies": {
+        "id": 1,
+        "css": 2,
+        "text": 1
+      }
+    },
+    "performance": {
+      "totalExecutionTime": "15.7s",
+      "avgTestDuration": "714ms",
+      "loadTestResults": {
+        "avgSuccessRate": "99.5%",
+        "p95ResponseTime": "120ms",
+        "p99ResponseTime": "250ms"
+      }
+    },
+    "coverage": {
+      "functions": "3/3 (100%)",
+      "lines": "31/31 (100%)",
+      "endpoints": "3/3 (100%)"
+    },
+    "issues": [],
+    "recommendations": [
+      "Add data-testid attributes for better selector stability",
+      "Consider implementing circuit breakers for session handling",
+      "Monitor parsing performance after bug fixes"
+    ]
+  }
+}

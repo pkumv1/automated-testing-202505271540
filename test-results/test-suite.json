@@ -1,0 +1,75 @@
+{
+  "functionTests": [
+    {
+      "file": "RTSservices/java/com/mars/rti/controller/BirthCertificateController.java",
+      "function": "saveRTIBirthApplication",
+      "changeType": "modified",
+      "targetLines": [181],
+      "testType": "create",
+      "priority": "high"
+    },
+    {
+      "file": "RTSservices/java/com/mars/rti/controller/DeathRegistartionController.java",
+      "function": "editDeathRegistrationCertificate",
+      "changeType": "modified",
+      "targetLines": [488, 489, 490],
+      "testType": "update",
+      "priority": "high"
+    },
+    {
+      "file": "RTSservices/java/com/mars/rti/controller/DogLicenceCertificateController.java",
+      "function": "saveDogLicenceCertificate",
+      "changeType": "modified",
+      "targetLines": [232, 236, 251, 255],
+      "testType": "create",
+      "priority": "critical"
+    }
+  ],
+  "apiTests": [
+    {
+      "endpoint": "/saveRTIBirthApplication",
+      "methods": ["POST", "GET"],
+      "testScenarios": ["valid_data", "invalid_data", "boundary_values", "session_handling"],
+      "focusAreas": ["data validation"]
+    },
+    {
+      "endpoint": "/editDeathRegistrationCertificate",
+      "methods": ["POST", "GET"],
+      "testScenarios": ["valid_data", "invalid_data", "boundary_values", "session_handling"],
+      "focusAreas": ["session attribute handling"]
+    },
+    {
+      "endpoint": "/saveDogLicenceCertificate",
+      "methods": ["POST", "GET"],
+      "testScenarios": ["valid_data", "invalid_data", "boundary_values", "session_handling"],
+      "focusAreas": ["data validation"]
+    }
+  ],
+  "uiTests": [
+    {
+      "component": "BirthCertificate",
+      "targetLines": [181],
+      "visualTests": false,
+      "interactions": ["form_submission", "validation", "response_handling"],
+      "healingEnabled": true
+    },
+    {
+      "component": "DeathRegistartion",
+      "targetLines": [488, 489, 490],
+      "visualTests": false,
+      "interactions": ["form_submission", "validation", "response_handling"],
+      "healingEnabled": true
+    },
+    {
+      "component": "DogLicenceCertificate",
+      "targetLines": [232, 236, 251, 255],
+      "visualTests": false,
+      "interactions": ["form_submission", "validation", "response_handling"],
+      "healingEnabled": true
+    }
+  ],
+  "totalTests": 9,
+  "estimatedDuration": "30m",
+  "selfHealingEnabled": true,
+  "testReduction": "70%"
+}

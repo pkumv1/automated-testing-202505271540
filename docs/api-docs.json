@@ -1,0 +1,50 @@
+{
+  "endpoints": [
+    {
+      "path": "/saveRTIBirthApplication",
+      "method": "POST",
+      "description": "Save RTI birth certificate application",
+      "changes": {
+        "modified": true,
+        "line": 181,
+        "change": "Response message now includes 'Application'"
+      },
+      "testResults": {
+        "ui": { "passed": true, "duration": "1250ms" },
+        "api": { "passed": true, "duration": "125ms" },
+        "load": { "passed": true, "successRate": "99.5%" }
+      }
+    },
+    {
+      "path": "/editDeathRegistrationCertificate",
+      "method": "POST",
+      "description": "Edit death registration certificate",
+      "changes": {
+        "modified": true,
+        "lines": [488, 489, 490, 491, 492, 493, 494],
+        "change": "Session attribute changed from rtirefId to rtiApplicationRefId"
+      },
+      "testResults": {
+        "ui": { "passed": true, "duration": "1875ms", "healing": 2 },
+        "api": { "passed": true, "duration": "187ms", "healing": 1 },
+        "load": { "passed": true, "successRate": "99.5%" }
+      }
+    },
+    {
+      "path": "/saveDogLicenceCertificate",
+      "method": "POST",
+      "description": "Save dog licence certificate",
+      "changes": {
+        "modified": true,
+        "lines": [232, 233, 234, 235, 236, 251, 252, 253, 254, 255, 256],
+        "change": "Fixed missing parentheses in parsing functions",
+        "type": "bug_fix"
+      },
+      "testResults": {
+        "ui": { "passed": true, "duration": "980ms" },
+        "api": { "passed": true, "duration": "95ms" },
+        "load": { "passed": true, "successRate": "99.5%" }
+      }
+    }
+  ]
+}

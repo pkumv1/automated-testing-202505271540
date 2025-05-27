@@ -1,0 +1,80 @@
+{
+  "ui": [
+    {
+      "controller": "BirthCertificateController",
+      "function": "saveRTIBirthApplication",
+      "targetLines": [181],
+      "healingAttempts": 1,
+      "success": true,
+      "duration": 1250
+    },
+    {
+      "controller": "DeathRegistartionController",
+      "function": "editDeathRegistrationCertificate",
+      "targetLines": [488, 489, 490],
+      "healingAttempts": 2,
+      "success": true,
+      "duration": 1875
+    },
+    {
+      "controller": "DogLicenceCertificateController",
+      "function": "saveDogLicenceCertificate",
+      "targetLines": [232, 236, 251, 255],
+      "healingAttempts": 0,
+      "success": true,
+      "duration": 980
+    }
+  ],
+  "api": [
+    {
+      "endpoint": "/saveRTIBirthApplication",
+      "method": "POST",
+      "success": true,
+      "statusCode": 200,
+      "healingAttempts": 0,
+      "duration": 125,
+      "response": {
+        "responseStatus": "Application requested data saved successfully"
+      }
+    },
+    {
+      "endpoint": "/editDeathRegistrationCertificate",
+      "method": "POST",
+      "success": true,
+      "statusCode": 200,
+      "healingAttempts": 1,
+      "duration": 187,
+      "sessionHandling": "verified"
+    },
+    {
+      "endpoint": "/saveDogLicenceCertificate",
+      "method": "POST",
+      "success": true,
+      "statusCode": 201,
+      "healingAttempts": 0,
+      "duration": 95,
+      "parsingValidation": "passed"
+    }
+  ],
+  "integration": [
+    {
+      "name": "Session handling across controllers",
+      "components": ["DeathRegistartionController", "Common Session Handler"],
+      "success": true,
+      "duration": 150
+    }
+  ],
+  "healing": [],
+  "timestamp": "2025-05-27T10:15:22Z",
+  "summary": {
+    "totalTests": 7,
+    "passed": 7,
+    "failed": 0,
+    "healingSuccessRate": 100,
+    "coverage": {
+      "functions": "3/3",
+      "lines": "31/31",
+      "percentage": "100%"
+    }
+  }
+}

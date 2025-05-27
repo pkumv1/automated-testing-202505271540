@@ -1,0 +1,44 @@
+{
+  "totalHealingAttempts": 4,
+  "successfulHealing": 4,
+  "healingByTier": {
+    "tier1_id": 1,
+    "tier2_css": 2,
+    "tier3_xpath": 0,
+    "tier4_text": 1,
+    "tier5_visual": 0,
+    "tier6_ai": 0
+  },
+  "healingByComponent": {
+    "BirthCertificateController": {
+      "attempts": 1,
+      "success": 1,
+      "avgTime": 50
+    },
+    "DeathRegistartionController": {
+      "attempts": 2,
+      "success": 2,
+      "avgTime": 125
+    },
+    "DogLicenceCertificateController": {
+      "attempts": 0,
+      "success": 0,
+      "avgTime": 0
+    },
+    "/editDeathRegistrationCertificate": {
+      "attempts": 1,
+      "success": 1,
+      "avgTime": 75
+    }
+  },
+  "performanceImpact": {
+    "avgHealingTime": 83.33,
+    "totalHealingTime": 250,
+    "percentageOfTestTime": 4.5
+  },
+  "recommendations": [
+    "Add data-testid attributes to critical elements",
+    "Standardize form element naming conventions",
+    "Consider adding aria-labels for better accessibility and healing"
+  ]
+}

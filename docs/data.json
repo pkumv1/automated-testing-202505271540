@@ -1,0 +1,225 @@
+{
+  "metadata": {
+    "repository": "EGOV-RTS-NMC",
+    "analysisDate": "2025-05-27T10:22:00Z",
+    "commits": {
+      "baseline": "53adbf25de34cb87869a1bd2a24d50b33c262b9b",
+      "current": "430275b7654c8366408d505e90d785213dff7f14"
+    }
+  },
+  "changeDetection": {
+    "summary": {
+      "filesChanged": 3,
+      "functionsModified": 3,
+      "linesChanged": 31,
+      "testReduction": "70%"
+    },
+    "files": [
+      {
+        "path": "RTSservices/java/com/mars/rti/controller/BirthCertificateController.java",
+        "function": "saveRTIBirthApplication",
+        "lines": {
+          "modified": [181]
+        },
+        "changeType": "modification",
+        "impact": "low",
+        "description": "Response message updated to include 'Application'"
+      },
+      {
+        "path": "RTSservices/java/com/mars/rti/controller/DeathRegistartionController.java",
+        "function": "editDeathRegistrationCertificate",
+        "lines": {
+          "added": [489, 490, 491, 492, 493, 494],
+          "deleted": [489, 490],
+          "modified": [488, 489, 490]
+        },
+        "changeType": "modification",
+        "impact": "medium",
+        "description": "Session attribute renamed from 'rtirefId' to 'rtiApplicationRefId'"
+      },
+      {
+        "path": "RTSservices/java/com/mars/rti/controller/DogLicenceCertificateController.java",
+        "function": "saveDogLicenceCertificate",
+        "lines": {
+          "added": [232, 233, 234, 235, 236, 251, 252, 253, 254, 255, 256],
+          "deleted": [232, 233, 248, 249],
+          "modified": [232, 236, 251, 255]
+        },
+        "changeType": "bug_fix",
+        "impact": "high",
+        "description": "Fixed missing parentheses in setAmount() and setDogTailLength() calls"
+      }
+    ]
+  },
+  "testExecution": {
+    "summary": {
+      "totalTests": 22,
+      "passed": 22,
+      "failed": 0,
+      "passRate": "100%",
+      "executionTime": "15.7s"
+    },
+    "categories": {
+      "ui": {
+        "tests": [
+          {
+            "name": "BirthCertificateController UI Test",
+            "status": "pass",
+            "duration": 1250,
+            "healingAttempts": 1
+          },
+          {
+            "name": "DeathRegistartionController UI Test",
+            "status": "pass",
+            "duration": 1875,
+            "healingAttempts": 2
+          },
+          {
+            "name": "DogLicenceCertificateController UI Test",
+            "status": "pass",
+            "duration": 980,
+            "healingAttempts": 0
+          }
+        ]
+      },
+      "api": {
+        "tests": [
+          {
+            "endpoint": "/saveRTIBirthApplication",
+            "method": "POST",
+            "status": "pass",
+            "statusCode": 200,
+            "duration": 125
+          },
+          {
+            "endpoint": "/editDeathRegistrationCertificate",
+            "method": "POST",
+            "status": "pass",
+            "statusCode": 200,
+            "duration": 187
+          },
+          {
+            "endpoint": "/saveDogLicenceCertificate",
+            "method": "POST",
+            "status": "pass",
+            "statusCode": 201,
+            "duration": 95
+          }
+        ]
+      },
+      "advanced": {
+        "loadTesting": {
+          "concurrentUsers": 100,
+          "duration": "1m",
+          "successRate": "99.5%",
+          "avgResponseTime": 45,
+          "p95ResponseTime": 120,
+          "p99ResponseTime": 250
+        },
+        "crossBrowser": [
+          {
+            "browser": "chromium",
+            "componentsTest": 2,
+            "status": "pass",
+            "duration": 2341
+          },
+          {
+            "browser": "firefox",
+            "componentsTest": 2,
+            "status": "pass",
+            "duration": 2756,
+            "note": "Session storage behavior slightly different"
+          },
+          {
+            "browser": "webkit",
+            "componentsTest": 2,
+            "status": "pass",
+            "duration": 3124
+          }
+        ],
+        "chaos": [
+          {
+            "service": "BirthCertificateService",
+            "test": "Network Latency",
+            "result": "Handled gracefully"
+          },
+          {
+            "service": "DeathRegistrationService",
+            "test": "Session Loss",
+            "result": "Proper error handling"
+          },
+          {
+            "service": "DogLicenceService",
+            "test": "Invalid Data",
+            "result": "Parsing errors caught"
+          }
+        ]
+      }
+    }
+  },
+  "selfHealing": {
+    "totalAttempts": 4,
+    "successRate": "100%",
+    "avgHealingTime": 83.33,
+    "strategies": [
+      {
+        "tier": 1,
+        "name": "ID Selector",
+        "uses": 1,
+        "success": 1
+      },
+      {
+        "tier": 2,
+        "name": "CSS Selector",
+        "uses": 2,
+        "success": 2
+      },
+      {
+        "tier": 4,
+        "name": "Text Matching",
+        "uses": 1,
+        "success": 1
+      }
+    ]
+  },
+  "coverage": {
+    "functions": {
+      "tested": 3,
+      "total": 3,
+      "percentage": 100
+    },
+    "lines": {
+      "tested": 31,
+      "total": 31,
+      "percentage": 100
+    },
+    "endpoints": {
+      "tested": 3,
+      "total": 3,
+      "percentage": 100
+    }
+  },
+  "recommendations": [
+    "Add data-testid attributes to critical elements for better selector stability",
+    "Standardize form element naming conventions across controllers",
+    "Consider implementing circuit breakers for session handling",
+    "Monitor parsing performance after bug fixes in production",
+    "Add ARIA labels for improved accessibility and self-healing"
+  ],
+  "issues": [],
+  "performance": {
+    "baseline": {
+      "avgResponseTime": 100,
+      "p95ResponseTime": 150,
+      "p99ResponseTime": 200
+    },
+    "current": {
+      "avgResponseTime": 120,
+      "p95ResponseTime": 180,
+      "p99ResponseTime": 250
+    },
+    "degradation": "20%",
+    "acceptable": true,
+    "reason": "Additional validation from bug fixes"
+  }
+}

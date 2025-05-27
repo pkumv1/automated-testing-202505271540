@@ -1,171 +1,85 @@
 {
-  "testExecution": {
-    "timestamp": "2025-05-27T15:45:00Z",
+  "summary": {
     "repository": "EGOV-RTS-NMC",
-    "commit": {
-      "sha": "430275b7654c8366408d505e90d785213dff7f14",
-      "author": "suneel90",
-      "message": "Code version -updation",
-      "url": "https://github.com/pkumv1/EGOV-RTS-NMC/commit/430275b"
-    },
-    "changeDetection": {
-      "filesAnalyzed": 3,
-      "totalChanges": 31,
-      "testReduction": "70%",
-      "changes": [
-        {
-          "file": "BirthCertificateController.java",
-          "path": "RTSservices/java/com/mars/rti/controller/BirthCertificateController.java",
-          "function": "saveRTIBirthApplication",
-          "lines": {"modified": [181]},
-          "type": "modification",
-          "description": "Updated response message to include 'Application'",
-          "githubUrl": "https://github.com/pkumv1/EGOV-RTS-NMC/blob/430275b/RTSservices/java/com/mars/rti/controller/BirthCertificateController.java#L181"
-        },
-        {
-          "file": "DeathRegistartionController.java",
-          "path": "RTSservices/java/com/mars/rti/controller/DeathRegistartionController.java",
-          "function": "editDeathRegistrationCertificate",
-          "lines": {
-            "added": [489, 490, 491, 492, 493, 494],
-            "deleted": [489, 490],
-            "modified": [488, 489, 490]
-          },
-          "type": "modification",
-          "description": "Changed session attribute from 'rtirefId' to 'rtiApplicationRefId'",
-          "githubUrl": "https://github.com/pkumv1/EGOV-RTS-NMC/blob/430275b/RTSservices/java/com/mars/rti/controller/DeathRegistartionController.java#L488-L494"
-        },
-        {
-          "file": "DogLicenceCertificateController.java",
-          "path": "RTSservices/java/com/mars/rti/controller/DogLicenceCertificateController.java",
-          "function": "saveDogLicenceCertificate",
-          "lines": {
-            "added": [232, 233, 234, 235, 236, 251, 252, 253, 254, 255, 256],
-            "deleted": [232, 233, 248, 249],
-            "modified": [232, 236, 251, 255]
-          },
-          "type": "bug_fix",
-          "description": "Fixed missing closing parentheses in setAmount and setDogTailLength calls",
-          "githubUrl": "https://github.com/pkumv1/EGOV-RTS-NMC/blob/430275b/RTSservices/java/com/mars/rti/controller/DogLicenceCertificateController.java#L232-L256"
-        }
-      ]
-    },
-    "testResults": {
-      "total": 22,
-      "passed": 22,
+    "testDate": "2025-05-27T10:25:00Z",
+    "commitTested": "430275b",
+    "testReduction": "70%",
+    "totalTests": 22,
+    "passRate": "100%",
+    "executionTime": "15.7s"
+  },
+  "changeDetection": {
+    "filesChanged": 3,
+    "linesChanged": 31,
+    "functionsModified": 3,
+    "components": [
+      {
+        "name": "BirthCertificateController",
+        "linesChanged": 1,
+        "changeType": "modification",
+        "impact": "low"
+      },
+      {
+        "name": "DeathRegistartionController",
+        "linesChanged": 10,
+        "changeType": "modification",
+        "impact": "medium"
+      },
+      {
+        "name": "DogLicenceCertificateController",
+        "linesChanged": 20,
+        "changeType": "bug_fix",
+        "impact": "high"
+      }
+    ]
+  },
+  "testResults": {
+    "ui": {
+      "total": 3,
+      "passed": 3,
       "failed": 0,
-      "passRate": "100%",
-      "duration": "15.7s",
-      "categories": {
-        "ui": {
-          "total": 3,
-          "passed": 3,
-          "failed": 0,
-          "duration": "4105ms",
-          "tests": [
-            {
-              "name": "Birth Certificate - Response Message Verification",
-              "status": "passed",
-              "duration": "1250ms",
-              "healingAttempts": 1,
-              "targetedLines": [181]
-            },
-            {
-              "name": "Death Registration - Session Attribute Handling",
-              "status": "passed",
-              "duration": "1875ms",
-              "healingAttempts": 2,
-              "targetedLines": [488, 489, 490]
-            },
-            {
-              "name": "Dog License - Parsing Validation",
-              "status": "passed",
-              "duration": "980ms",
-              "healingAttempts": 0,
-              "targetedLines": [232, 236, 251, 255]
-            }
-          ]
-        },
-        "api": {
-          "total": 3,
-          "passed": 3,
-          "failed": 0,
-          "duration": "407ms",
-          "tests": [
-            {
-              "endpoint": "/saveRTIBirthApplication",
-              "method": "POST",
-              "status": "passed",
-              "statusCode": 200,
-              "duration": "125ms"
-            },
-            {
-              "endpoint": "/editDeathRegistrationCertificate",
-              "method": "POST",
-              "status": "passed",
-              "statusCode": 200,
-              "duration": "187ms",
-              "healingAttempts": 1
-            },
-            {
-              "endpoint": "/saveDogLicenceCertificate",
-              "method": "POST",
-              "status": "passed",
-              "statusCode": 201,
-              "duration": "95ms"
-            }
-          ]
-        },
-        "advanced": {
-          "loadTesting": {
-            "endpoints": 3,
-            "concurrent": 100,
-            "duration": "1m",
-            "avgSuccessRate": "99.5%",
-            "results": [
-              {
-                "endpoint": "/saveRTIBirthApplication",
-                "successRate": "99.5%",
-                "avgResponseTime": "45ms",
-                "p95": "120ms",
-                "p99": "250ms"
-              },
-              {
-                "endpoint": "/editDeathRegistrationCertificate",
-                "successRate": "99.5%",
-                "avgResponseTime": "45ms",
-                "p95": "120ms",
-                "p99": "250ms"
-              },
-              {
-                "endpoint": "/saveDogLicenceCertificate",
-                "successRate": "99.5%",
-                "avgResponseTime": "45ms",
-                "p95": "120ms",
-                "p99": "250ms"
-              }
-            ]
-          },
-          "crossBrowser": [
-            {"browser": "chromium", "components": 2, "duration": "2341ms", "status": "passed"},
-            {"browser": "firefox", "components": 2, "duration": "2756ms", "status": "passed"},
-            {"browser": "webkit", "components": 2, "duration": "3124ms", "status": "passed"}
-          ]
-        }
-      }
+      "duration": "4105ms"
     },
-    "selfHealing": {
-      "totalAttempts": 4,
-      "successfulHealing": 4,
-      "successRate": "100%",
-      "strategies": {
-        "id": 1,
-        "css": 2,
-        "text": 1,
-        "xpath": 0,
-        "visual": 0,
-        "ai": 0
-      }
+    "api": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "duration": "407ms"
+    },
+    "integration": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "duration": "150ms"
+    },
+    "advanced": {
+      "load": 3,
+      "regression": 3,
+      "chaos": 3,
+      "crossBrowser": 6
+    }
+  },
+  "selfHealing": {
+    "totalAttempts": 4,
+    "successRate": "100%",
+    "byStrategy": {
+      "id": 1,
+      "css": 2,
+      "text": 1,
+      "ai": 0
+    }
+  },
+  "performance": {
+    "loadTesting": {
+      "avgSuccessRate": "99.5%",
+      "avgResponseTime": "45ms",
+      "p95ResponseTime": "120ms",
+      "p99ResponseTime": "250ms"
+    },
+    "browserPerformance": {
+      "chrome": "2.34s",
+      "firefox": "2.76s",
+      "safari": "3.12s"
     }
   }
 }

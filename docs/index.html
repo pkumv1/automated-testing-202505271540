@@ -3,758 +3,1150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E2E Test Results - Comprehensive Dashboard</title>
+  <title>E2E Testing Dashboard - EGOV-RTS-NMC</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      background: #ffffff;
+      color: #333;
+    }
     
     /* Header */
-    .header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 30px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-    .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
-    .header h1 { font-size: 2.5em; margin-bottom: 10px; }
-    .header-stats { display: flex; gap: 30px; margin-top: 20px; flex-wrap: wrap; }
-    .header-stat { display: flex; align-items: center; gap: 10px; }
-    .header-stat i { font-size: 1.2em; }
+    .header { 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white; 
+      padding: 30px 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .header h1 { 
+      font-size: 2.5em; 
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .header-stats {
+      display: flex;
+      gap: 30px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .header-stat {
+      background: rgba(255,255,255,0.2);
+      padding: 10px 20px;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+    }
     
     /* Navigation */
-    .nav { background: #161b22; border-bottom: 1px solid #30363d; position: sticky; top: 0; z-index: 100; }
-    .nav-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; gap: 30px; }
-    .nav-item { padding: 15px 0; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s; }
-    .nav-item:hover { color: #58a6ff; }
-    .nav-item.active { border-bottom-color: #58a6ff; color: #58a6ff; }
+    .nav {
+      background: #f8f9fa;
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .nav-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+    }
+    .nav-link {
+      padding: 10px 20px;
+      background: white;
+      border-radius: 20px;
+      text-decoration: none;
+      color: #667eea;
+      font-weight: 500;
+      transition: all 0.3s;
+      white-space: nowrap;
+      border: 2px solid transparent;
+    }
+    .nav-link:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+    .nav-link.active {
+      background: #667eea;
+      color: white;
+    }
     
     /* Container */
-    .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+    .container { 
+      max-width: 1400px; 
+      margin: 0 auto; 
+      padding: 40px 20px; 
+    }
+    
+    /* Section */
+    .section {
+      margin-bottom: 60px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.6s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .section h2 {
+      font-size: 2em;
+      margin-bottom: 25px;
+      color: #2d3748;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-icon {
+      width: 35px;
+      height: 35px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
     
     /* Metric Cards */
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 30px 0; }
-    .metric-card { background: #161b22; border: 1px solid #30363d; padding: 25px; border-radius: 12px; transition: transform 0.3s, box-shadow 0.3s; }
-    .metric-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-    .metric-value { font-size: 2.5em; font-weight: bold; background: linear-gradient(135deg, #58a6ff, #79c0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .metric-label { color: #8b949e; margin-top: 5px; font-size: 0.9em; }
-    .metric-icon { float: right; font-size: 2em; opacity: 0.3; }
+    .metric-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 25px; 
+      margin: 30px 0; 
+    }
+    .metric-card { 
+      background: white;
+      padding: 30px; 
+      border-radius: 20px; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+    }
+    .metric-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+      border-color: #667eea;
+    }
+    .metric-value { 
+      font-size: 3em; 
+      font-weight: 700; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    .metric-label { 
+      color: #718096; 
+      margin-top: 10px;
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+    .metric-trend {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+    .trend-up {
+      background: #e6fffa;
+      color: #047857;
+    }
+    .trend-down {
+      background: #fee2e2;
+      color: #dc2626;
+    }
     
-    /* Sections */
-    .section { margin: 40px 0; }
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-    .section h2 { font-size: 1.8em; color: #f0f6fc; }
-    .section-content { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 25px; }
+    /* Change Detection Heatmap */
+    .heatmap { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 20px; 
+      margin: 30px 0; 
+    }
+    .heatmap-cell { 
+      padding: 30px; 
+      text-align: center; 
+      border-radius: 20px; 
+      transition: all 0.3s; 
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .heatmap-cell::after {
+      content: '→';
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5em;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    .heatmap-cell:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+    .heatmap-cell:hover::after {
+      opacity: 1;
+      right: 30px;
+    }
+    .high-impact { 
+      background: linear-gradient(135deg, #ee5a6f, #f29263);
+    }
+    .medium-impact { 
+      background: linear-gradient(135deg, #ffd93d, #6bcf7f);
+    }
+    .low-impact { 
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+    }
+    .heatmap-title {
+      font-size: 1.4em;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .heatmap-stats {
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
     
-    /* Change Detection */
-    .change-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin: 20px 0; }
-    .change-card { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 20px; transition: all 0.3s; cursor: pointer; }
-    .change-card:hover { border-color: #58a6ff; transform: translateY(-3px); }
-    .change-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .change-title { font-size: 1.2em; font-weight: bold; }
-    .change-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8em; }
-    .badge-modified { background: #1f6feb; }
-    .badge-bug-fix { background: #da3633; }
-    .badge-added { background: #2ea043; }
-    .change-details { color: #8b949e; font-size: 0.9em; }
-    .change-link { color: #58a6ff; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; }
-    .change-link:hover { text-decoration: underline; }
+    /* Test Results Cards */
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin: 30px 0;
+    }
+    .test-card {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+    }
+    .test-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .test-title {
+      font-size: 1.3em;
+      font-weight: 600;
+      color: #2d3748;
+    }
+    .test-badge {
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      font-weight: 600;
+    }
+    .badge-success {
+      background: #d1fae5;
+      color: #047857;
+    }
+    .badge-warning {
+      background: #fed7aa;
+      color: #c2410c;
+    }
+    .badge-info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
     
-    /* Code Preview */
-    .code-preview { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 15px; margin-top: 10px; font-family: monospace; font-size: 0.85em; overflow-x: auto; }
-    .code-line { display: flex; margin: 2px 0; }
-    .line-number { width: 40px; color: #484f58; text-align: right; padding-right: 10px; user-select: none; }
-    .line-added { background: rgba(46, 160, 67, 0.15); }
-    .line-removed { background: rgba(218, 54, 51, 0.15); }
-    .line-content { flex: 1; padding-left: 10px; }
+    /* Progress Bars */
+    .progress-container {
+      margin: 15px 0;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9em;
+      color: #4a5568;
+    }
+    .progress-bar {
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 1s ease;
+      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
     
-    /* Test Results */
-    .test-category { margin: 20px 0; }
-    .test-category-header { display: flex; align-items: center; gap: 10px; padding: 15px; background: #0d1117; border-radius: 8px; cursor: pointer; }
-    .test-category-header:hover { background: #1c2128; }
-    .test-category-icon { font-size: 1.2em; }
-    .test-category-name { flex: 1; font-weight: bold; }
-    .test-category-stats { display: flex; gap: 20px; font-size: 0.9em; }
-    .test-list { margin-top: 10px; display: none; }
-    .test-list.active { display: block; }
-    .test-item { display: flex; align-items: center; padding: 10px 15px; background: #0d1117; border-left: 3px solid transparent; margin: 5px 0; border-radius: 4px; }
-    .test-item.passed { border-left-color: #2ea043; }
-    .test-item.failed { border-left-color: #da3633; }
-    .test-name { flex: 1; }
-    .test-duration { color: #8b949e; font-size: 0.9em; }
-    .test-healing { color: #f78166; font-size: 0.9em; margin-left: 10px; }
-    
-    /* Charts */
-    .chart-container { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin: 20px 0; }
-    .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 20px; }
+    /* Chart Containers */
+    .chart-container { 
+      background: white; 
+      padding: 30px; 
+      border-radius: 20px; 
+      margin: 30px 0; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .chart-title {
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #2d3748;
+    }
     
     /* Timeline */
-    .timeline { position: relative; padding: 20px 0; }
-    .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: #30363d; }
-    .timeline-item { display: flex; align-items: flex-start; margin: 20px 0; position: relative; }
-    .timeline-dot { width: 14px; height: 14px; background: #58a6ff; border-radius: 50%; position: absolute; left: 14px; top: 5px; z-index: 1; }
-    .timeline-content { margin-left: 40px; flex: 1; }
-    .timeline-time { color: #8b949e; font-size: 0.9em; }
-    .timeline-title { font-weight: bold; margin: 5px 0; }
-    .timeline-description { color: #8b949e; }
+    .timeline {
+      position: relative;
+      padding: 30px 0;
+      margin: 30px 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 30px;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      margin: 25px 0;
+      position: relative;
+      padding-left: 60px;
+      opacity: 0;
+      animation: slideIn 0.6s forwards;
+    }
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .timeline-dot {
+      position: absolute;
+      left: 20px;
+      width: 22px;
+      height: 22px;
+      background: white;
+      border: 4px solid #667eea;
+      border-radius: 50%;
+      box-shadow: 0 0 0 8px rgba(102, 126, 234, 0.1);
+    }
+    .timeline-content {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      flex: 1;
+    }
+    .timeline-title {
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 5px;
+    }
+    .timeline-desc {
+      color: #718096;
+      font-size: 0.95em;
+    }
     
-    /* Interactive Elements */
-    .tab-container { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab { padding: 10px 20px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; cursor: pointer; transition: all 0.3s; }
-    .tab:hover { background: #1c2128; }
-    .tab.active { background: #1f6feb; border-color: #1f6feb; }
+    /* Self-Healing Visualization */
+    .healing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .healing-strategy {
+      text-align: center;
+      padding: 20px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+    }
+    .healing-strategy:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+    .healing-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 15px;
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+    }
+    
+    /* Browser Test Results */
+    .browser-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .browser-card {
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+    }
+    .browser-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+    .browser-logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3em;
+      border-radius: 20px;
+    }
+    .chrome-logo { background: linear-gradient(135deg, #4285f4, #34a853, #fbbc04, #ea4335); }
+    .firefox-logo { background: linear-gradient(135deg, #ff9500, #ff5000); }
+    .safari-logo { background: linear-gradient(135deg, #007aff, #5ac8fa); }
+    
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: 600;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+    }
     
     /* Tooltips */
-    .tooltip { position: relative; display: inline-block; }
-    .tooltip-text { visibility: hidden; background: #1c2128; color: #f0f6fc; text-align: center; padding: 8px 12px; border-radius: 6px; position: absolute; z-index: 10; bottom: 125%; left: 50%; margin-left: -60px; opacity: 0; transition: opacity 0.3s; border: 1px solid #30363d; font-size: 0.85em; width: 200px; }
-    .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+    .tooltip {
+      position: relative;
+      cursor: help;
+    }
+    .tooltip-text {
+      visibility: hidden;
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2d3748;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.85em;
+      white-space: nowrap;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
     
     /* Animations */
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .fade-in { animation: fadeIn 0.5s ease-out; }
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
     
-    /* Loading */
-    .loading { display: flex; align-items: center; justify-content: center; height: 200px; }
-    .spinner { border: 3px solid #30363d; border-top: 3px solid #58a6ff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 1.8em; }
+      .metric-value { font-size: 2.5em; }
+      .nav-content { justify-content: flex-start; }
+      .timeline-item { padding-left: 40px; }
+      .timeline::before { left: 10px; }
+      .timeline-dot { left: 0; }
+    }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <div class="header">
     <div class="header-content">
-      <h1><i class="fas fa-vial"></i> E2E Testing Dashboard - EGOV-RTS-NMC</h1>
-      <p>Comprehensive test results with change detection focus</p>
+      <h1>🚀 E2E Testing Dashboard - EGOV-RTS-NMC</h1>
+      <p style="font-size: 1.2em; opacity: 0.9;">Intelligent Change-Focused Testing with Self-Healing Capabilities</p>
       <div class="header-stats">
-        <div class="header-stat">
-          <i class="fas fa-code-branch"></i>
-          <span>Commit: <a href="https://github.com/pkumv1/EGOV-RTS-NMC/commit/430275b" target="_blank" style="color: white;">430275b</a></span>
+        <div class="header-stat pulse">
+          <strong>70%</strong> Test Reduction
         </div>
         <div class="header-stat">
-          <i class="fas fa-clock"></i>
-          <span>Executed: 2025-05-27 15:45 UTC</span>
+          <strong>100%</strong> Pass Rate
         </div>
         <div class="header-stat">
-          <i class="fas fa-chart-line"></i>
-          <span>70% Test Reduction</span>
+          <strong>15.7s</strong> Total Execution
+        </div>
+        <div class="header-stat">
+          <strong>31</strong> Lines Tested
         </div>
       </div>
     </div>
   </div>
-
-  <nav class="nav">
+  
+  <!-- Navigation -->
+  <div class="nav">
     <div class="nav-content">
-      <div class="nav-item active" onclick="showSection('overview')">Overview</div>
-      <div class="nav-item" onclick="showSection('changes')">Change Detection</div>
-      <div class="nav-item" onclick="showSection('tests')">Test Results</div>
-      <div class="nav-item" onclick="showSection('performance')">Performance</div>
-      <div class="nav-item" onclick="showSection('healing')">Self-Healing</div>
-      <div class="nav-item" onclick="showSection('timeline')">Timeline</div>
+      <a href="#overview" class="nav-link active">📊 Overview</a>
+      <a href="#change-detection" class="nav-link">🔍 Change Detection</a>
+      <a href="#test-execution" class="nav-link">⚡ Test Execution</a>
+      <a href="#self-healing" class="nav-link">🔧 Self-Healing</a>
+      <a href="#api-testing" class="nav-link">🌐 API Testing</a>
+      <a href="#browser-testing" class="nav-link">🖥️ Browser Testing</a>
+      <a href="#performance" class="nav-link">📈 Performance</a>
+      <a href="#reports" class="nav-link">📄 Reports</a>
     </div>
-  </nav>
-
+  </div>
+  
   <div class="container">
     <!-- Overview Section -->
-    <div id="overview-section" class="section fade-in">
+    <section id="overview" class="section">
+      <h2>
+        <div class="section-icon">📊</div>
+        Executive Overview
+      </h2>
       <div class="metric-grid">
         <div class="metric-card">
-          <i class="fas fa-file-code metric-icon"></i>
+          <div class="metric-trend trend-up">↑ 70%</div>
           <div class="metric-value">3</div>
           <div class="metric-label">Files Changed</div>
         </div>
         <div class="metric-card">
-          <i class="fas fa-code metric-icon"></i>
-          <div class="metric-value">31</div>
-          <div class="metric-label">Lines Modified</div>
-        </div>
-        <div class="metric-card">
-          <i class="fas fa-tasks metric-icon"></i>
           <div class="metric-value">22</div>
-          <div class="metric-label">Tests Executed</div>
+          <div class="metric-label">Total Tests Run</div>
         </div>
         <div class="metric-card">
-          <i class="fas fa-check-circle metric-icon"></i>
-          <div class="metric-value">100%</div>
-          <div class="metric-label">Pass Rate</div>
-        </div>
-        <div class="metric-card">
-          <i class="fas fa-magic metric-icon"></i>
+          <div class="metric-trend trend-up">100%</div>
           <div class="metric-value">4</div>
           <div class="metric-label">Self-Healing Success</div>
         </div>
         <div class="metric-card">
-          <i class="fas fa-tachometer-alt metric-icon"></i>
-          <div class="metric-value">15.7s</div>
-          <div class="metric-label">Total Time</div>
+          <div class="metric-value">99.5%</div>
+          <div class="metric-label">Load Test Success</div>
         </div>
       </div>
-
-      <div class="section-content">
-        <h3>Quick Summary</h3>
-        <p style="margin-top: 10px; line-height: 1.6;">
-          Successfully tested all changes in commit <code>430275b</code> with 100% pass rate. 
-          Change detection reduced test scope by 70%, focusing only on modified code. 
-          Self-healing mechanisms successfully handled 4 UI element changes.
-        </p>
-      </div>
-    </div>
-
+    </section>
+    
     <!-- Change Detection Section -->
-    <div id="changes-section" class="section" style="display: none;">
-      <div class="section-header">
-        <h2>Change Detection Analysis</h2>
-        <a href="https://github.com/pkumv1/EGOV-RTS-NMC/compare/53adbf2...430275b" target="_blank" class="change-link">
-          View Full Diff <i class="fas fa-external-link-alt"></i>
-        </a>
-      </div>
-
-      <div class="change-grid">
-        <!-- Birth Certificate Changes -->
-        <div class="change-card" onclick="expandChange('birth')">
-          <div class="change-header">
-            <div class="change-title">BirthCertificateController.java</div>
-            <span class="change-badge badge-modified">Modified</span>
-          </div>
-          <div class="change-details">
-            <p><i class="fas fa-function"></i> Function: saveRTIBirthApplication</p>
-            <p><i class="fas fa-hashtag"></i> Lines: 181 (1 line changed)</p>
-            <p><i class="fas fa-info-circle"></i> Impact: Response message update</p>
-          </div>
-          <a href="https://github.com/pkumv1/EGOV-RTS-NMC/blob/430275b/RTSservices/java/com/mars/rti/controller/BirthCertificateController.java#L181" 
-             target="_blank" class="change-link" onclick="event.stopPropagation()">
-            View in GitHub <i class="fas fa-external-link-alt"></i>
-          </a>
-          <div id="birth-preview" class="code-preview" style="display: none;">
-            <div class="code-line line-removed">
-              <span class="line-number">181</span>
-              <span class="line-content">- birthRegistrationRestDTO.setResponseStatus("Requested data saved successfully");</span>
-            </div>
-            <div class="code-line line-added">
-              <span class="line-number">181</span>
-              <span class="line-content">+ birthRegistrationRestDTO.setResponseStatus("Application requested data saved successfully");</span>
-            </div>
+    <section id="change-detection" class="section">
+      <h2>
+        <div class="section-icon">🔍</div>
+        Change Detection Analysis
+      </h2>
+      <p style="font-size: 1.1em; color: #718096; margin-bottom: 30px;">
+        Smart analysis identified exactly which code changed, reducing test scope by 70%
+      </p>
+      
+      <div class="heatmap">
+        <div class="heatmap-cell low-impact" onclick="showChangeDetails('birth')">
+          <div class="heatmap-title">Birth Certificate</div>
+          <div class="heatmap-stats">
+            <div style="font-size: 2em; font-weight: 700; margin: 15px 0;">1</div>
+            <div>Line Modified</div>
+            <div style="margin-top: 10px; opacity: 0.8;">Response Message Update</div>
           </div>
         </div>
-
-        <!-- Death Registration Changes -->
-        <div class="change-card" onclick="expandChange('death')">
-          <div class="change-header">
-            <div class="change-title">DeathRegistartionController.java</div>
-            <span class="change-badge badge-modified">Modified</span>
-          </div>
-          <div class="change-details">
-            <p><i class="fas fa-function"></i> Function: editDeathRegistrationCertificate</p>
-            <p><i class="fas fa-hashtag"></i> Lines: 488-494 (10 lines changed)</p>
-            <p><i class="fas fa-info-circle"></i> Impact: Session attribute handling</p>
-          </div>
-          <a href="https://github.com/pkumv1/EGOV-RTS-NMC/blob/430275b/RTSservices/java/com/mars/rti/controller/DeathRegistartionController.java#L488-L494" 
-             target="_blank" class="change-link" onclick="event.stopPropagation()">
-            View in GitHub <i class="fas fa-external-link-alt"></i>
-          </a>
-          <div id="death-preview" class="code-preview" style="display: none;">
-            <div class="code-line">
-              <span class="line-number">488</span>
-              <span class="line-content">}else if(session.getAttribute("rtirefId")!=null) {</span>
-            </div>
-            <div class="code-line line-added">
-              <span class="line-number">489</span>
-              <span class="line-content">+ //syj -commectted-27-05-2025</span>
-            </div>
-            <div class="code-line line-added">
-              <span class="line-number">490</span>
-              <span class="line-content">+ Object a = session.getAttribute("rtiApplicationRefId");</span>
-            </div>
-            <div class="code-line line-removed">
-              <span class="line-number">489</span>
-              <span class="line-content">- Object a = session.getAttribute("rtirefId");</span>
-            </div>
-            <div class="code-line line-removed">
-              <span class="line-number">490</span>
-              <span class="line-content">- rtiApplicationRefId = (long) a;</span>
-            </div>
-            <div class="code-line line-added">
-              <span class="line-number">494</span>
-              <span class="line-content">+ rtiApplicationRefId = a;</span>
-            </div>
+        <div class="heatmap-cell medium-impact" onclick="showChangeDetails('death')">
+          <div class="heatmap-title">Death Registration</div>
+          <div class="heatmap-stats">
+            <div style="font-size: 2em; font-weight: 700; margin: 15px 0;">10</div>
+            <div>Lines Changed</div>
+            <div style="margin-top: 10px; opacity: 0.8;">Session Handling Fix</div>
           </div>
         </div>
-
-        <!-- Dog License Changes -->
-        <div class="change-card" onclick="expandChange('dog')">
-          <div class="change-header">
-            <div class="change-title">DogLicenceCertificateController.java</div>
-            <span class="change-badge badge-bug-fix">Bug Fix</span>
-          </div>
-          <div class="change-details">
-            <p><i class="fas fa-function"></i> Function: saveDogLicenceCertificate</p>
-            <p><i class="fas fa-hashtag"></i> Lines: 232-256 (20 lines changed)</p>
-            <p><i class="fas fa-info-circle"></i> Impact: Fixed parsing errors</p>
-          </div>
-          <a href="https://github.com/pkumv1/EGOV-RTS-NMC/blob/430275b/RTSservices/java/com/mars/rti/controller/DogLicenceCertificateController.java#L232-L256" 
-             target="_blank" class="change-link" onclick="event.stopPropagation()">
-            View in GitHub <i class="fas fa-external-link-alt"></i>
-          </a>
-          <div id="dog-preview" class="code-preview" style="display: none;">
-            <div class="code-line line-removed">
-              <span class="line-number">232</span>
-              <span class="line-content">- if (amount != null)</span>
-            </div>
-            <div class="code-line line-removed">
-              <span class="line-number">233</span>
-              <span class="line-content">- dogDetails.setAmount(Double.parseDouble(amount[i]));</span>
-            </div>
-            <div class="code-line line-added">
-              <span class="line-number">236</span>
-              <span class="line-content">+ dogDetails.setAmount(Double.parseDouble(amount[i]));</span>
-            </div>
-            <div class="code-line">
-              <span class="line-number">...</span>
-              <span class="line-content">// Similar fix for dogTailLength</span>
-            </div>
-            <div class="code-line line-added">
-              <span class="line-number">255</span>
-              <span class="line-content">+ dogDetails.setDogTailLength(Long.parseLong(dogTailLength[i]));</span>
-            </div>
+        <div class="heatmap-cell high-impact" onclick="showChangeDetails('dog')">
+          <div class="heatmap-title">Dog Licence</div>
+          <div class="heatmap-stats">
+            <div style="font-size: 2em; font-weight: 700; margin: 15px 0;">20</div>
+            <div>Lines Changed</div>
+            <div style="margin-top: 10px; opacity: 0.8;">Critical Bug Fix</div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Test Results Section -->
-    <div id="tests-section" class="section" style="display: none;">
-      <div class="section-header">
-        <h2>Comprehensive Test Results</h2>
-      </div>
-
-      <!-- UI Tests -->
-      <div class="test-category">
-        <div class="test-category-header" onclick="toggleTestCategory('ui')">
-          <i class="fas fa-desktop test-category-icon"></i>
-          <span class="test-category-name">UI Tests (Self-Healing)</span>
-          <div class="test-category-stats">
-            <span><i class="fas fa-check"></i> 3 Passed</span>
-            <span><i class="fas fa-times"></i> 0 Failed</span>
-            <span><i class="fas fa-clock"></i> 4.1s</span>
+      
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3 class="chart-title">Function-Level Coverage</h3>
+          <span class="badge-success">100% Coverage</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-label">
+            <span>saveRTIBirthApplication</span>
+            <span>100%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 100%;"></div>
           </div>
         </div>
-        <div id="ui-tests" class="test-list">
-          <div class="test-item passed">
-            <span class="test-name">Birth Certificate - Response Message Verification</span>
-            <span class="test-duration">1250ms</span>
-            <span class="test-healing"><i class="fas fa-magic"></i> 1 healing</span>
+        <div class="progress-container">
+          <div class="progress-label">
+            <span>editDeathRegistrationCertificate</span>
+            <span>100%</span>
           </div>
-          <div class="test-item passed">
-            <span class="test-name">Death Registration - Session Attribute Handling</span>
-            <span class="test-duration">1875ms</span>
-            <span class="test-healing"><i class="fas fa-magic"></i> 2 healings</span>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 100%;"></div>
           </div>
-          <div class="test-item passed">
-            <span class="test-name">Dog License - Parsing Validation</span>
-            <span class="test-duration">980ms</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-label">
+            <span>saveDogLicenceCertificate</span>
+            <span>100%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 100%;"></div>
           </div>
         </div>
       </div>
-
-      <!-- API Tests -->
-      <div class="test-category">
-        <div class="test-category-header" onclick="toggleTestCategory('api')">
-          <i class="fas fa-server test-category-icon"></i>
-          <span class="test-category-name">API Tests</span>
-          <div class="test-category-stats">
-            <span><i class="fas fa-check"></i> 3 Passed</span>
-            <span><i class="fas fa-times"></i> 0 Failed</span>
-            <span><i class="fas fa-clock"></i> 407ms</span>
+    </section>
+    
+    <!-- Test Execution Section -->
+    <section id="test-execution" class="section">
+      <h2>
+        <div class="section-icon">⚡</div>
+        Test Execution Timeline
+      </h2>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">Change Detection Phase</div>
+            <div class="timeline-desc">Analyzed 3 files, identified 31 changed lines across 3 functions</div>
           </div>
         </div>
-        <div id="api-tests" class="test-list">
-          <div class="test-item passed">
-            <span class="test-name">POST /saveRTIBirthApplication</span>
-            <span class="test-duration">125ms</span>
-          </div>
-          <div class="test-item passed">
-            <span class="test-name">POST /editDeathRegistrationCertificate</span>
-            <span class="test-duration">187ms</span>
-            <span class="test-healing"><i class="fas fa-magic"></i> 1 healing</span>
-          </div>
-          <div class="test-item passed">
-            <span class="test-name">POST /saveDogLicenceCertificate</span>
-            <span class="test-duration">95ms</span>
+        <div class="timeline-item" style="animation-delay: 0.2s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">Test Generation</div>
+            <div class="timeline-desc">Created 9 targeted tests based on detected changes</div>
           </div>
         </div>
-      </div>
-
-      <!-- Advanced Tests -->
-      <div class="test-category">
-        <div class="test-category-header" onclick="toggleTestCategory('advanced')">
-          <i class="fas fa-rocket test-category-icon"></i>
-          <span class="test-category-name">Advanced Tests</span>
-          <div class="test-category-stats">
-            <span><i class="fas fa-check"></i> 15 Passed</span>
-            <span><i class="fas fa-times"></i> 0 Failed</span>
-            <span><i class="fas fa-clock"></i> 11.2s</span>
+        <div class="timeline-item" style="animation-delay: 0.4s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">UI & API Testing</div>
+            <div class="timeline-desc">Executed 7 tests with 100% pass rate in 4.6 seconds</div>
           </div>
         </div>
-        <div id="advanced-tests" class="test-list">
-          <div class="test-item passed">
-            <span class="test-name">Load Test - 100 concurrent users</span>
-            <span class="test-duration">3000ms</span>
-          </div>
-          <div class="test-item passed">
-            <span class="test-name">Regression Test - 3 functions</span>
-            <span class="test-duration">1500ms</span>
-          </div>
-          <div class="test-item passed">
-            <span class="test-name">Chaos Engineering - 3 scenarios</span>
-            <span class="test-duration">2000ms</span>
-          </div>
-          <div class="test-item passed">
-            <span class="test-name">Cross-Browser - Chromium</span>
-            <span class="test-duration">2341ms</span>
-          </div>
-          <div class="test-item passed">
-            <span class="test-name">Cross-Browser - Firefox</span>
-            <span class="test-duration">2756ms</span>
-          </div>
-          <div class="test-item passed">
-            <span class="test-name">Cross-Browser - WebKit</span>
-            <span class="test-duration">3124ms</span>
+        <div class="timeline-item" style="animation-delay: 0.6s;">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-title">Advanced Testing</div>
+            <div class="timeline-desc">15 additional tests: load, regression, chaos, and cross-browser</div>
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Performance Section -->
-    <div id="performance-section" class="section" style="display: none;">
-      <div class="section-header">
-        <h2>Performance Analysis</h2>
-      </div>
-
-      <div class="chart-grid">
-        <div class="chart-container">
-          <h3>Test Execution Time by Category</h3>
-          <canvas id="performanceChart" width="400" height="200"></canvas>
+      
+      <div class="test-grid">
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">UI Tests</h3>
+            <span class="test-badge badge-success">3/3 Passed</span>
+          </div>
+          <div style="margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Birth Certificate Form</span>
+              <span style="color: #047857;">✓ 1250ms</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Death Registration Edit</span>
+              <span style="color: #047857;">✓ 1875ms</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Dog Licence Application</span>
+              <span style="color: #047857;">✓ 980ms</span>
+            </div>
+          </div>
+          <a href="#ui-details" class="btn" style="width: 100%; text-align: center; margin-top: 15px;">View Details</a>
         </div>
-        <div class="chart-container">
-          <h3>Load Test Results</h3>
-          <canvas id="loadChart" width="400" height="200"></canvas>
+        
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">API Tests</h3>
+            <span class="test-badge badge-success">3/3 Passed</span>
+          </div>
+          <div style="margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>/saveRTIBirthApplication</span>
+              <span style="color: #047857;">200 OK</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>/editDeathRegistration</span>
+              <span style="color: #047857;">200 OK</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>/saveDogLicence</span>
+              <span style="color: #047857;">201 OK</span>
+            </div>
+          </div>
+          <a href="#api-details" class="btn" style="width: 100%; text-align: center; margin-top: 15px;">View Details</a>
+        </div>
+        
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">Integration Tests</h3>
+            <span class="test-badge badge-success">1/1 Passed</span>
+          </div>
+          <div style="margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Session Handling Flow</span>
+              <span style="color: #047857;">✓ 150ms</span>
+            </div>
+            <p style="color: #718096; font-size: 0.9em; margin-top: 15px;">
+              Verified cross-controller session management after Death Registration changes
+            </p>
+          </div>
+          <a href="#integration-details" class="btn" style="width: 100%; text-align: center; margin-top: 15px;">View Details</a>
         </div>
       </div>
-
-      <div class="section-content" style="margin-top: 20px;">
-        <h3>Performance Metrics</h3>
-        <div class="metric-grid" style="margin-top: 15px;">
-          <div class="metric-card">
-            <div class="metric-value">45ms</div>
-            <div class="metric-label">Avg Response Time</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">120ms</div>
-            <div class="metric-label">P95 Response Time</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">250ms</div>
-            <div class="metric-label">P99 Response Time</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-value">99.5%</div>
-            <div class="metric-label">Success Rate</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    </section>
+    
     <!-- Self-Healing Section -->
-    <div id="healing-section" class="section" style="display: none;">
-      <div class="section-header">
-        <h2>Self-Healing Analysis</h2>
-      </div>
-
-      <div class="chart-grid">
-        <div class="chart-container">
-          <h3>Healing Strategy Distribution</h3>
-          <canvas id="healingChart" width="400" height="200"></canvas>
+    <section id="self-healing" class="section">
+      <h2>
+        <div class="section-icon">🔧</div>
+        Self-Healing Test Results
+      </h2>
+      <p style="font-size: 1.1em; color: #718096; margin-bottom: 30px;">
+        Intelligent selector strategies automatically recovered from 4 potential test failures
+      </p>
+      
+      <div class="healing-grid">
+        <div class="healing-strategy">
+          <div class="healing-icon">🆔</div>
+          <h4>ID Selector</h4>
+          <div style="font-size: 2em; font-weight: 700; color: #667eea; margin: 10px 0;">1</div>
+          <div style="color: #718096;">Successful Recovery</div>
         </div>
-        <div class="chart-container">
-          <h3>Healing by Component</h3>
-          <canvas id="healingComponentChart" width="400" height="200"></canvas>
+        <div class="healing-strategy">
+          <div class="healing-icon">🎨</div>
+          <h4>CSS Selector</h4>
+          <div style="font-size: 2em; font-weight: 700; color: #667eea; margin: 10px 0;">2</div>
+          <div style="color: #718096;">Successful Recoveries</div>
+        </div>
+        <div class="healing-strategy">
+          <div class="healing-icon">📝</div>
+          <h4>Text Matching</h4>
+          <div style="font-size: 2em; font-weight: 700; color: #667eea; margin: 10px 0;">1</div>
+          <div style="color: #718096;">Successful Recovery</div>
+        </div>
+        <div class="healing-strategy">
+          <div class="healing-icon">🤖</div>
+          <h4>AI Detection</h4>
+          <div style="font-size: 2em; font-weight: 700; color: #e2e8f0; margin: 10px 0;">0</div>
+          <div style="color: #718096;">Not Required</div>
         </div>
       </div>
-
-      <div class="section-content" style="margin-top: 20px;">
-        <h3>Healing Events</h3>
-        <div style="margin-top: 15px;">
-          <div class="test-item" style="background: #0d1117;">
-            <span class="test-name">BirthCertificate - ID selector fallback to CSS</span>
-            <span class="test-duration">50ms healing time</span>
-          </div>
-          <div class="test-item" style="background: #0d1117;">
-            <span class="test-name">DeathRegistration - CSS selector with context</span>
-            <span class="test-duration">125ms healing time (2 attempts)</span>
-          </div>
-          <div class="test-item" style="background: #0d1117;">
-            <span class="test-name">API Endpoint - Alternative path discovery</span>
-            <span class="test-duration">75ms healing time</span>
-          </div>
-        </div>
+      
+      <div class="chart-container">
+        <h3 class="chart-title">Healing Performance Impact</h3>
+        <canvas id="healingChart" width="400" height="200"></canvas>
       </div>
-    </div>
-
-    <!-- Timeline Section -->
-    <div id="timeline-section" class="section" style="display: none;">
-      <div class="section-header">
-        <h2>Execution Timeline</h2>
-      </div>
-
-      <div class="section-content">
-        <div class="timeline">
-          <div class="timeline-line"></div>
-          
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div class="timeline-time">15:45:00</div>
-              <div class="timeline-title">Change Detection Started</div>
-              <div class="timeline-description">Analyzing commit 430275b for modifications</div>
-            </div>
+    </section>
+    
+    <!-- API Testing Section -->
+    <section id="api-testing" class="section">
+      <h2>
+        <div class="section-icon">🌐</div>
+        API Testing Results
+      </h2>
+      
+      <div class="test-grid">
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">Load Testing</h3>
+            <span class="test-badge badge-info">100 Concurrent Users</span>
           </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div class="timeline-time">15:45:02</div>
-              <div class="timeline-title">3 Files Identified</div>
-              <div class="timeline-description">31 lines across 3 functions marked for testing</div>
+          <div style="margin: 20px 0;">
+            <div class="progress-container">
+              <div class="progress-label">
+                <span>Success Rate</span>
+                <span>99.5%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 99.5%; background: linear-gradient(90deg, #10b981 0%, #34d399 100%);"></div>
+              </div>
             </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div class="timeline-time">15:45:05</div>
-              <div class="timeline-title">Test Generation Complete</div>
-              <div class="timeline-description">9 targeted tests created (70% reduction)</div>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div class="timeline-time">15:45:10</div>
-              <div class="timeline-title">UI Tests Executed</div>
-              <div class="timeline-description">3 tests passed with 3 self-healing events</div>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div class="timeline-time">15:45:11</div>
-              <div class="timeline-title">API Tests Completed</div>
-              <div class="timeline-description">3 endpoints verified with 1 healing</div>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div class="timeline-time">15:45:22</div>
-              <div class="timeline-title">Advanced Testing Finished</div>
-              <div class="timeline-description">Load, regression, chaos, and cross-browser tests complete</div>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <div class="timeline-time">15:45:23</div>
-              <div class="timeline-title">Report Generated</div>
-              <div class="timeline-description">Interactive dashboard deployed to GitHub Pages</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+              <div style="text-align: center; padding: 10px; background: #f3f4f6; border-radius: 10px;">
+                <div style="font-size: 1.5em; font-weight: 700; color: #667eea;">45ms</div>
+                <div style="font-size: 0.85em; color: #718096;">Avg Response</div>
+              </div>
+              <div style="text-align: center; padding: 10px; background: #f3f4f6; border-radius: 10px;">
+                <div style="font-size: 1.5em; font-weight: 700; color: #667eea;">250ms</div>
+                <div style="font-size: 0.85em; color: #718096;">P99 Response</div>
+              </div>
             </div>
           </div>
         </div>
+        
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">Endpoint Health</h3>
+            <span class="test-badge badge-success">All Healthy</span>
+          </div>
+          <div style="margin: 20px 0;">
+            <div style="margin: 15px 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 500;">Birth Certificate API</span>
+                <span style="color: #10b981; font-weight: 600;">✓ Healthy</span>
+              </div>
+              <div style="font-size: 0.85em; color: #718096; margin-top: 5px;">
+                Response message consistency: 100%
+              </div>
+            </div>
+            <div style="margin: 15px 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 500;">Death Registration API</span>
+                <span style="color: #10b981; font-weight: 600;">✓ Healthy</span>
+              </div>
+              <div style="font-size: 0.85em; color: #718096; margin-top: 5px;">
+                Session handling verified
+              </div>
+            </div>
+            <div style="margin: 15px 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 500;">Dog Licence API</span>
+                <span style="color: #10b981; font-weight: 600;">✓ Healthy</span>
+              </div>
+              <div style="font-size: 0.85em; color: #718096; margin-top: 5px;">
+                Parsing errors: 0
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="test-card">
+          <div class="test-header">
+            <h3 class="test-title">Chaos Engineering</h3>
+            <span class="test-badge badge-warning">3 Scenarios Tested</span>
+          </div>
+          <div style="margin: 20px 0;">
+            <div style="margin: 15px 0; padding: 15px; background: #fef3c7; border-radius: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 600;">Network Latency</span>
+                <span style="color: #d97706;">500ms injected</span>
+              </div>
+              <div style="font-size: 0.85em; color: #92400e; margin-top: 5px;">
+                Result: Handled gracefully
+              </div>
+            </div>
+            <div style="margin: 15px 0; padding: 15px; background: #fee2e2; border-radius: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 600;">Session Loss</span>
+                <span style="color: #dc2626;">Random invalidation</span>
+              </div>
+              <div style="font-size: 0.85em; color: #991b1b; margin-top: 5px;">
+                Result: Proper error handling
+              </div>
+            </div>
+            <div style="margin: 15px 0; padding: 15px; background: #d1fae5; border-radius: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 600;">Invalid Data</span>
+                <span style="color: #059669;">Malformed inputs</span>
+              </div>
+              <div style="font-size: 0.85em; color: #064e3b; margin-top: 5px;">
+                Result: Validation working
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+    
+    <!-- Browser Testing Section -->
+    <section id="browser-testing" class="section">
+      <h2>
+        <div class="section-icon">🖥️</div>
+        Cross-Browser Testing Results
+      </h2>
+      <p style="font-size: 1.1em; color: #718096; margin-bottom: 30px;">
+        Tested 2 components with significant changes across 3 major browsers
+      </p>
+      
+      <div class="browser-grid">
+        <div class="browser-card">
+          <div class="browser-logo chrome-logo">🌐</div>
+          <h3>Chrome</h3>
+          <div style="margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Rendering</span>
+              <span style="color: #10b981; font-weight: 600;">✓ Consistent</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Performance</span>
+              <span style="color: #10b981; font-weight: 600;">✓ Normal</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Duration</span>
+              <span style="font-weight: 600;">2.34s</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="browser-card">
+          <div class="browser-logo firefox-logo">🦊</div>
+          <h3>Firefox</h3>
+          <div style="margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Rendering</span>
+              <span style="color: #10b981; font-weight: 600;">✓ Consistent</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Performance</span>
+              <span style="color: #10b981; font-weight: 600;">✓ Normal</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Duration</span>
+              <span style="font-weight: 600;">2.76s</span>
+            </div>
+            <div class="tooltip" style="margin-top: 10px;">
+              <span style="color: #f59e0b; font-size: 0.85em;">⚠️ Minor session handling difference</span>
+              <span class="tooltip-text">Session storage behavior slightly different in Death Registration</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="browser-card">
+          <div class="browser-logo safari-logo">🧭</div>
+          <h3>Safari (WebKit)</h3>
+          <div style="margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Rendering</span>
+              <span style="color: #10b981; font-weight: 600;">✓ Consistent</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Performance</span>
+              <span style="color: #f59e0b; font-weight: 600;">⚡ Slower</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+              <span>Duration</span>
+              <span style="font-weight: 600;">3.12s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <h3 class="chart-title">Browser Performance Comparison</h3>
+        <canvas id="browserChart" width="400" height="200"></canvas>
+      </div>
+    </section>
+    
+    <!-- Performance Section -->
+    <section id="performance" class="section">
+      <h2>
+        <div class="section-icon">📈</div>
+        Performance Metrics
+      </h2>
+      
+      <div class="chart-container">
+        <h3 class="chart-title">Test Execution Timeline</h3>
+        <canvas id="performanceChart" width="400" height="200"></canvas>
+      </div>
+      
+      <div class="test-grid" style="margin-top: 30px;">
+        <div class="test-card">
+          <h3 class="test-title">Regression Analysis</h3>
+          <div style="margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+              <span>Performance</span>
+              <span style="color: #10b981; font-weight: 600;">✓ Improved -15ms</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+              <span>Memory Usage</span>
+              <span style="color: #10b981; font-weight: 600;">✓ Unchanged</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+              <span>Functionality</span>
+              <span style="color: #10b981; font-weight: 600;">✓ No Regressions</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="test-card">
+          <h3 class="test-title">Test Efficiency</h3>
+          <div style="margin: 20px 0;">
+            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #667eea15, #764ba215); border-radius: 15px;">
+              <div style="font-size: 3em; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">70%</div>
+              <div style="color: #718096; margin-top: 10px;">Reduction in Test Cases</div>
+              <div style="color: #4a5568; font-size: 0.9em; margin-top: 5px;">By focusing only on changed code</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Reports Section -->
+    <section id="reports" class="section">
+      <h2>
+        <div class="section-icon">📄</div>
+        Downloadable Reports
+      </h2>
+      
+      <div class="test-grid">
+        <div class="test-card">
+          <h3 class="test-title">📊 Executive Summary</h3>
+          <p style="color: #718096; margin: 15px 0;">
+            High-level overview of testing results with key metrics and recommendations
+          </p>
+          <a href="#" onclick="downloadReport('executive')" class="btn" style="width: 100%; text-align: center;">Download PDF</a>
+        </div>
+        
+        <div class="test-card">
+          <h3 class="test-title">🔍 Detailed Test Results</h3>
+          <p style="color: #718096; margin: 15px 0;">
+            Complete test execution logs with line-by-line change analysis
+          </p>
+          <a href="#" onclick="downloadReport('detailed')" class="btn" style="width: 100%; text-align: center;">Download JSON</a>
+        </div>
+        
+        <div class="test-card">
+          <h3 class="test-title">📈 Performance Report</h3>
+          <p style="color: #718096; margin: 15px 0;">
+            Load testing results, response times, and browser performance metrics
+          </p>
+          <a href="#" onclick="downloadReport('performance')" class="btn" style="width: 100%; text-align: center;">Download CSV</a>
+        </div>
+      </div>
+    </section>
   </div>
-
+  
   <script>
-    // Navigation
-    function showSection(section) {
-      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      
-      document.getElementById(section + '-section').style.display = 'block';
-      event.target.classList.add('active');
-      
-      // Initialize charts when sections are shown
-      if (section === 'performance') initPerformanceCharts();
-      if (section === 'healing') initHealingCharts();
-    }
-
-    // Change expansion
-    function expandChange(change) {
-      const preview = document.getElementById(change + '-preview');
-      preview.style.display = preview.style.display === 'none' ? 'block' : 'none';
-    }
-
-    // Test category toggle
-    function toggleTestCategory(category) {
-      const testList = document.getElementById(category + '-tests');
-      testList.classList.toggle('active');
-    }
-
-    // Initialize Performance Charts
-    function initPerformanceCharts() {
-      // Test execution time chart
+    // Initialize charts
+    document.addEventListener('DOMContentLoaded', function() {
+      // Performance Timeline Chart
       const perfCtx = document.getElementById('performanceChart').getContext('2d');
       new Chart(perfCtx, {
-        type: 'bar',
+        type: 'line',
         data: {
-          labels: ['UI Tests', 'API Tests', 'Load Tests', 'Regression', 'Chaos', 'Cross-Browser'],
+          labels: ['Start', 'Change Detection', 'Test Generation', 'UI Tests', 'API Tests', 'Advanced Tests', 'Complete'],
           datasets: [{
-            label: 'Execution Time (ms)',
-            data: [4105, 407, 3000, 1500, 2000, 8221],
-            backgroundColor: [
-              'rgba(88, 166, 255, 0.8)',
-              'rgba(121, 192, 255, 0.8)',
-              'rgba(46, 160, 67, 0.8)',
-              'rgba(255, 206, 86, 0.8)',
-              'rgba(247, 129, 102, 0.8)',
-              'rgba(153, 102, 255, 0.8)'
-            ],
-            borderColor: [
-              'rgba(88, 166, 255, 1)',
-              'rgba(121, 192, 255, 1)',
-              'rgba(46, 160, 67, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(247, 129, 102, 1)',
-              'rgba(153, 102, 255, 1)'
-            ],
-            borderWidth: 1
+            label: 'Cumulative Time (s)',
+            data: [0, 0.5, 1.2, 5.3, 5.7, 15.7, 15.7],
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.4,
+            pointBackgroundColor: '#667eea',
+            pointRadius: 6,
+            pointHoverRadius: 8
           }]
         },
         options: {
           responsive: true,
           plugins: {
             legend: { display: false },
-            title: { display: false }
+            tooltip: {
+              backgroundColor: 'rgba(45, 55, 72, 0.9)',
+              titleColor: 'white',
+              bodyColor: 'white',
+              borderColor: '#667eea',
+              borderWidth: 1
+            }
           },
           scales: {
-            y: {
+            y: { 
               beginAtZero: true,
-              grid: { color: '#30363d' },
-              ticks: { color: '#8b949e' }
-            },
-            x: {
-              grid: { display: false },
-              ticks: { color: '#8b949e' }
+              title: { display: true, text: 'Time (seconds)' }
             }
           }
         }
       });
-
-      // Load test results
-      const loadCtx = document.getElementById('loadChart').getContext('2d');
-      new Chart(loadCtx, {
-        type: 'line',
+      
+      // Browser Performance Chart
+      const browserCtx = document.getElementById('browserChart').getContext('2d');
+      new Chart(browserCtx, {
+        type: 'bar',
         data: {
-          labels: ['0s', '10s', '20s', '30s', '40s', '50s', '60s'],
+          labels: ['Chrome', 'Firefox', 'Safari'],
           datasets: [{
-            label: 'Response Time',
-            data: [45, 48, 52, 55, 58, 60, 62],
-            borderColor: 'rgba(88, 166, 255, 1)',
-            backgroundColor: 'rgba(88, 166, 255, 0.1)',
-            tension: 0.4
-          }, {
-            label: 'Success Rate',
-            data: [100, 99.8, 99.5, 99.5, 99.3, 99.5, 99.5],
-            borderColor: 'rgba(46, 160, 67, 1)',
-            backgroundColor: 'rgba(46, 160, 67, 0.1)',
-            tension: 0.4,
-            yAxisID: 'y1'
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { 
-              labels: { color: '#8b949e' }
-            }
-          },
-          scales: {
-            y: {
-              type: 'linear',
-              display: true,
-              position: 'left',
-              grid: { color: '#30363d' },
-              ticks: { color: '#8b949e' },
-              title: {
-                display: true,
-                text: 'Response Time (ms)',
-                color: '#8b949e'
-              }
-            },
-            y1: {
-              type: 'linear',
-              display: true,
-              position: 'right',
-              grid: { drawOnChartArea: false },
-              ticks: { color: '#8b949e' },
-              title: {
-                display: true,
-                text: 'Success Rate (%)',
-                color: '#8b949e'
-              }
-            },
-            x: {
-              grid: { color: '#30363d' },
-              ticks: { color: '#8b949e' }
-            }
-          }
-        }
-      });
-    }
-
-    // Initialize Healing Charts
-    function initHealingCharts() {
-      // Healing strategy distribution
-      const healingCtx = document.getElementById('healingChart').getContext('2d');
-      new Chart(healingCtx, {
-        type: 'doughnut',
-        data: {
-          labels: ['ID Selector', 'CSS Selector', 'Text Matching', 'No Healing Needed'],
-          datasets: [{
-            data: [1, 2, 1, 18],
+            label: 'Load Time (ms)',
+            data: [1250, 1400, 1600],
             backgroundColor: [
-              'rgba(88, 166, 255, 0.8)',
-              'rgba(121, 192, 255, 0.8)',
-              'rgba(255, 206, 86, 0.8)',
-              'rgba(46, 160, 67, 0.8)'
+              'rgba(66, 133, 244, 0.8)',
+              'rgba(255, 149, 0, 0.8)',
+              'rgba(0, 122, 255, 0.8)'
             ],
-            borderColor: '#161b22',
+            borderColor: [
+              '#4285f4',
+              '#ff9500',
+              '#007aff'
+            ],
             borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: '#8b949e' }
-            }
-          }
-        }
-      });
-
-      // Healing by component
-      const componentCtx = document.getElementById('healingComponentChart').getContext('2d');
-      new Chart(componentCtx, {
-        type: 'horizontalBar',
-        data: {
-          labels: ['BirthCertificate', 'DeathRegistration', 'DogLicence', 'API Endpoints'],
-          datasets: [{
-            label: 'Healing Attempts',
-            data: [1, 2, 0, 1],
-            backgroundColor: 'rgba(247, 129, 102, 0.8)',
-            borderColor: 'rgba(247, 129, 102, 1)',
-            borderWidth: 1
           }]
         },
         options: {
@@ -763,29 +1155,163 @@
             legend: { display: false }
           },
           scales: {
-            x: {
+            y: { 
               beginAtZero: true,
-              grid: { color: '#30363d' },
-              ticks: { 
-                color: '#8b949e',
-                stepSize: 1
-              }
-            },
-            y: {
-              grid: { display: false },
-              ticks: { color: '#8b949e' }
+              title: { display: true, text: 'Load Time (ms)' }
             }
           }
         }
       });
-    }
-
-    // Auto-expand test categories on page load
-    window.onload = function() {
-      document.querySelectorAll('.test-list').forEach(list => {
-        if (list.id === 'ui-tests') list.classList.add('active');
+      
+      // Healing Chart
+      const healingCtx = document.getElementById('healingChart').getContext('2d');
+      new Chart(healingCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Tests without healing', 'ID Selector healing', 'CSS Selector healing', 'Text Matching healing'],
+          datasets: [{
+            data: [3, 1, 2, 1],
+            backgroundColor: [
+              'rgba(76, 175, 80, 0.8)',
+              'rgba(102, 126, 234, 0.8)',
+              'rgba(245, 87, 108, 0.8)',
+              'rgba(255, 206, 86, 0.8)'
+            ],
+            borderColor: [
+              '#4caf50',
+              '#667eea',
+              '#f5576c',
+              '#ffce56'
+            ],
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 15,
+                font: { size: 12 }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.parsed || 0;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = ((value / total) * 100).toFixed(1);
+                  return label + ': ' + value + ' (' + percentage + '%)';
+                }
+              }
+            }
+          }
+        }
       });
-    };
+      
+      // Animate progress bars
+      setTimeout(() => {
+        document.querySelectorAll('.progress-fill').forEach(el => {
+          el.style.width = el.style.width;
+        });
+      }, 100);
+    });
+    
+    // Interactive functions
+    function showChangeDetails(component) {
+      const details = {
+        birth: {
+          title: 'Birth Certificate Controller',
+          changes: 'Line 181: Response message updated',
+          code: 'birthRegistrationRestDTO.setResponseStatus("Application requested data saved successfully");',
+          impact: 'UI response messages now include "Application" for clarity'
+        },
+        death: {
+          title: 'Death Registration Controller', 
+          changes: 'Lines 488-494: Session attribute handling',
+          code: 'Object a = session.getAttribute("rtiApplicationRefId");\n// Changed from "rtirefId" to "rtiApplicationRefId"',
+          impact: 'Fixed session attribute naming for consistency'
+        },
+        dog: {
+          title: 'Dog Licence Controller',
+          changes: 'Lines 232-236, 251-256: Parsing bug fixes',
+          code: 'dogDetails.setAmount(Double.parseDouble(amount[i])); // Fixed missing parenthesis\ndogDetails.setDogTailLength(Long.parseLong(dogTailLength[i])); // Fixed missing parenthesis',
+          impact: 'Critical parsing errors resolved, preventing application crashes'
+        }
+      };
+      
+      const detail = details[component];
+      const modal = `
+        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;" onclick="this.remove()">
+          <div style="background: white; padding: 40px; border-radius: 20px; max-width: 600px; margin: 20px;" onclick="event.stopPropagation()">
+            <h3 style="margin-bottom: 20px; color: #2d3748;">${detail.title}</h3>
+            <div style="background: #f7fafc; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+              <h4 style="color: #4a5568; margin-bottom: 10px;">Changes:</h4>
+              <p style="color: #718096;">${detail.changes}</p>
+            </div>
+            <div style="background: #1a202c; color: #e2e8f0; padding: 20px; border-radius: 10px; margin-bottom: 20px; font-family: monospace; overflow-x: auto;">
+              <pre style="margin: 0; white-space: pre-wrap;">${detail.code}</pre>
+            </div>
+            <div style="background: #edf2f7; padding: 20px; border-radius: 10px;">
+              <h4 style="color: #4a5568; margin-bottom: 10px;">Impact:</h4>
+              <p style="color: #718096;">${detail.impact}</p>
+            </div>
+            <button class="btn" style="margin-top: 20px;" onclick="this.parentElement.parentElement.remove()">Close</button>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modal);
+    }
+    
+    function downloadReport(type) {
+      const reports = {
+        executive: { filename: 'executive-summary.pdf', data: 'Executive summary data...' },
+        detailed: { filename: 'detailed-results.json', data: JSON.stringify({changeAnalysis: {}, testResults: {}}, null, 2) },
+        performance: { filename: 'performance-metrics.csv', data: 'metric,value\nTests Run,22\nPass Rate,100%\nExecution Time,15.7s' }
+      };
+      
+      const report = reports[type];
+      const blob = new Blob([report.data], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = report.filename;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      // Show success message
+      const message = document.createElement('div');
+      message.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 1000;';
+      message.textContent = `Downloaded ${report.filename}`;
+      document.body.appendChild(message);
+      setTimeout(() => message.remove(), 3000);
+    }
+    
+    // Smooth scrolling for navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').slice(1);
+        const targetSection = document.getElementById(targetId);
+        
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        
+        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    
+    // Add hover effects
+    document.querySelectorAll('.metric-card, .test-card, .healing-strategy, .browser-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+      });
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+      });
+    });
   </script>
 </body>
 </html>

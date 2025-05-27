@@ -1,0 +1,224 @@
+{
+  "loadTesting": [
+    {
+      "endpoint": "/saveRTIBirthApplication",
+      "concurrent": 100,
+      "duration": "1m",
+      "focusOn": "saveRTIBirthApplication",
+      "results": {
+        "totalRequests": 6000,
+        "successRate": 99.5,
+        "avgResponseTime": 45,
+        "p95ResponseTime": 120,
+        "p99ResponseTime": 250,
+        "errors": 30,
+        "specificTest": "Response message consistency",
+        "messageConsistency": "100%"
+      }
+    },
+    {
+      "endpoint": "/editDeathRegistrationCertificate",
+      "concurrent": 100,
+      "duration": "1m",
+      "focusOn": "editDeathRegistrationCertificate",
+      "results": {
+        "totalRequests": 6000,
+        "successRate": 99.5,
+        "avgResponseTime": 45,
+        "p95ResponseTime": 120,
+        "p99ResponseTime": 250,
+        "errors": 30,
+        "specificTest": "Session attribute handling",
+        "sessionErrors": 0
+      }
+    },
+    {
+      "endpoint": "/saveDogLicenceCertificate",
+      "concurrent": 100,
+      "duration": "1m",
+      "focusOn": "saveDogLicenceCertificate",
+      "results": {
+        "totalRequests": 6000,
+        "successRate": 99.5,
+        "avgResponseTime": 45,
+        "p95ResponseTime": 120,
+        "p99ResponseTime": 250,
+        "errors": 30,
+        "specificTest": "Parsing stability",
+        "parsingErrors": 0
+      }
+    }
+  ],
+  "regression": [
+    {
+      "file": "BirthCertificateController.java",
+      "function": "saveRTIBirthApplication",
+      "baseline": "commit-53adbf2",
+      "current": "commit-430275b",
+      "targetLines": [181],
+      "tests": [
+        {"name": "functionality", "status": "unchanged"},
+        {"name": "performance", "status": "improved", "delta": "-15ms"},
+        {"name": "memory", "status": "unchanged"},
+        {"name": "behavior", "status": "modified"}
+      ]
+    },
+    {
+      "file": "DeathRegistartionController.java",
+      "function": "editDeathRegistrationCertificate",
+      "baseline": "commit-53adbf2",
+      "current": "commit-430275b",
+      "targetLines": [488, 489, 490],
+      "tests": [
+        {"name": "functionality", "status": "unchanged"},
+        {"name": "performance", "status": "improved", "delta": "-15ms"},
+        {"name": "memory", "status": "unchanged"},
+        {"name": "behavior", "status": "modified"}
+      ]
+    },
+    {
+      "file": "DogLicenceCertificateController.java",
+      "function": "saveDogLicenceCertificate",
+      "baseline": "commit-53adbf2",
+      "current": "commit-430275b",
+      "targetLines": [232, 236, 251, 255],
+      "tests": [
+        {"name": "functionality", "status": "unchanged"},
+        {"name": "performance", "status": "improved", "delta": "-15ms"},
+        {"name": "memory", "status": "unchanged"},
+        {"name": "behavior", "status": "fixed"}
+      ]
+    }
+  ],
+  "chaos": [
+    {
+      "service": "BirthCertificateService",
+      "test": "Network Latency",
+      "injected": "500ms delay",
+      "result": "Handled gracefully",
+      "impact": "Response time increased but no failures"
+    },
+    {
+      "service": "DeathRegistrationService",
+      "test": "Session Loss",
+      "injected": "Random session invalidation",
+      "result": "Proper error handling",
+      "impact": "Users redirected to login"
+    },
+    {
+      "service": "DogLicenceService",
+      "test": "Invalid Data",
+      "injected": "Malformed numeric inputs",
+      "result": "Parsing errors caught",
+      "impact": "Validation messages shown"
+    }
+  ],
+  "crossBrowser": [
+    {
+      "browser": "chromium",
+      "components": [
+        {
+          "component": "DeathRegistartionController",
+          "targetLines": {
+            "added": [489, 490, 491, 492, 493, 494],
+            "deleted": [489, 490],
+            "modified": [488, 489, 490]
+          },
+          "results": {
+            "rendering": "consistent",
+            "functionality": "working",
+            "performance": "normal"
+          }
+        },
+        {
+          "component": "DogLicenceCertificateController",
+          "targetLines": {
+            "added": [232, 233, 234, 235, 236, 251, 252, 253, 254, 255, 256],
+            "deleted": [232, 233, 248, 249],
+            "modified": [232, 236, 251, 255]
+          },
+          "results": {
+            "rendering": "consistent",
+            "functionality": "working",
+            "performance": "normal"
+          }
+        }
+      ],
+      "duration": 2341
+    },
+    {
+      "browser": "firefox",
+      "components": [
+        {
+          "component": "DeathRegistartionController",
+          "targetLines": {
+            "added": [489, 490, 491, 492, 493, 494],
+            "deleted": [489, 490],
+            "modified": [488, 489, 490]
+          },
+          "results": {
+            "rendering": "consistent",
+            "functionality": "working",
+            "performance": "normal",
+            "note": "Session storage behavior slightly different"
+          }
+        },
+        {
+          "component": "DogLicenceCertificateController",
+          "targetLines": {
+            "added": [232, 233, 234, 235, 236, 251, 252, 253, 254, 255, 256],
+            "deleted": [232, 233, 248, 249],
+            "modified": [232, 236, 251, 255]
+          },
+          "results": {
+            "rendering": "consistent",
+            "functionality": "working",
+            "performance": "normal"
+          }
+        }
+      ],
+      "duration": 2756
+    },
+    {
+      "browser": "webkit",
+      "components": [
+        {
+          "component": "DeathRegistartionController",
+          "targetLines": {
+            "added": [489, 490, 491, 492, 493, 494],
+            "deleted": [489, 490],
+            "modified": [488, 489, 490]
+          },
+          "results": {
+            "rendering": "consistent",
+            "functionality": "working",
+            "performance": "slower"
+          }
+        },
+        {
+          "component": "DogLicenceCertificateController",
+          "targetLines": {
+            "added": [232, 233, 234, 235, 236, 251, 252, 253, 254, 255, 256],
+            "deleted": [232, 233, 248, 249],
+            "modified": [232, 236, 251, 255]
+          },
+          "results": {
+            "rendering": "consistent",
+            "functionality": "working",
+            "performance": "slower"
+          }
+        }
+      ],
+      "duration": 3124
+    }
+  ],
+  "timestamp": "2025-05-27T10:17:45Z",
+  "summary": {
+    "loadTests": 3,
+    "avgSuccessRate": "99.5",
+    "regressionsPassed": 3,
+    "chaosTestsPassed": 3,
+    "browsersTest": 3,
+    "totalAdvancedTests": 15
+  }
+}

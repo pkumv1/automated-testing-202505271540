@@ -2,10 +2,18 @@
   "name": "automated-testing-202505271540",
   "version": "1.0.0",
   "scripts": {
-    "test": "node test-scripts/run-tests.js"
+    "test": "node test-scripts/run-tests.js",
+    "test:execute": "node test-scripts/execute-tests.js",
+    "test:advanced": "node test-scripts/advanced-testing.js",
+    "test:full": "npm run test && npm run test:execute && npm run test:advanced",
+    "report": "node test-scripts/generate-report.js"
   },
   "dependencies": {
     "playwright": "latest",
-    "axios": "latest"
+    "axios": "latest",
+    "express": "latest"
+  },
+  "devDependencies": {
+    "@playwright/test": "latest"
   }
 }

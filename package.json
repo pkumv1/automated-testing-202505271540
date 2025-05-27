@@ -1,0 +1,11 @@
+{
+  "name": "automated-testing-202505271540",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node test-scripts/run-tests.js"
+  },
+  "dependencies": {
+    "playwright": "latest",
+    "axios": "latest"
+  }
+}
